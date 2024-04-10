@@ -1,71 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="12dp"
     tools:context=".MainActivity">
-
-
-    <Button
-        android:id="@+id/on_btn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Turn ON"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.013"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.119"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/off_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Turn OFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.985"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.119"
-        tools:ignore="MissingConstraints" />
-
+        android:orientation="horizontal"
+        >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Listen"
+            android:textSize="24dp"
+            android:id="@+id/listen_btn"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="20dp"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show List"
+            android:textSize="24dp"
+            android:id="@+id/list_btn"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="308dp"
-        android:layout_height="459dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.833" />
-
-    <TextView
-        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="List of Bounded Devices"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/on_btn" />
+        android:text="Status:"
+        android:id="@+id/status_txt"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20dp"/>
 
-    <Button
-        android:id="@+id/list_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show List"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.119" />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/lv"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"/>
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:layout_marginTop="100dp">
+       <EditText
+           android:layout_width="300dp"
+           android:layout_height="wrap_content"
+           android:singleLine="true"
+           android:id="@+id/et"
+           android:maxLines="1"/>
+       <Button
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="SEND"
+           android:id="@+id/send_btn"/>
+   </LinearLayout>
+
+
+</LinearLayout>
