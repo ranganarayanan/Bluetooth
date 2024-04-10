@@ -41,7 +41,7 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
-    Button listen, showlist, send;
+    Button listen, showlist;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private static final String NAME = "BluetoothChat";
@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
     List<String> nameList=new ArrayList<>();
     TextView statusTxt;
     ListView lv;
-    EditText et;
-    ChatThread chatThread;
     ArrayAdapter adapter;
 
     @SuppressLint({"MissingInflatedId", "MissingPermission"})
@@ -62,21 +60,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         listen = (Button) findViewById(R.id.listen_btn);
         showlist = (Button) findViewById(R.id.list_btn);
-        send = (Button) findViewById(R.id.send_btn);
         mBluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
         statusTxt=(TextView)findViewById(R.id.status_txt);
-        et=(EditText)findViewById(R.id.et);
         lv=(ListView) findViewById(R.id.lv);
-        adapter=new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_spinner_item,nameList);
-        lv.setAdapter(adapter);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chatThread.write(et.getText().toString().getBytes());
-                nameList.add("Send: "+et.getText().toString());
-                adapter.notifyDataSetChanged();
-            }
-        });
         if(!mBluetoothAdapter.isEnabled())
             mBluetoothAdapter.enable();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -103,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
                     deviceList.add(device);
                     nameList.add(device.getName());
                 }
-                adapter.notifyDataSetChanged();
+                adapter=new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_spinner_item,nameList);
+                lv.setAdapter(adapter);
             }
         });
 
@@ -185,8 +172,8 @@ public class MainActivity extends AppCompatActivity {
                             statusTxt.setText("Connected");
                         }
                     });
-                    chatThread=new ChatThread(socket);
-                    chatThread.start();
+                    MainActivity2.socket=socket;
+                    goToChatActivity();
                     try {
                         mmServerSocket.close();
                     } catch (IOException e) {
@@ -206,61 +193,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ChatThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-
-        public ChatThread(BluetoothSocket socket) {
-            mmSocket = socket;
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
-            try {
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        nameList.clear();
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-            } catch (IOException e) {
-                // Handle exception
+    private void goToChatActivity() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(MainActivity.this,MainActivity2.class));
             }
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
-        }
-
-        public void run() {
-            byte[] buffer = new byte[1024];
-            int bytes;
-            while (true) {
-                try {
-                    bytes = mmInStream.read(buffer);
-                    mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-                } catch (IOException e) {
-                    // Handle exception
-                    break;
-                }
-            }
-        }
-
-        public void write(byte[] bytes) {
-            try {
-                mmOutStream.write(bytes);
-            } catch (IOException e) {
-                // Handle exception
-            }
-        }
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                // Handle exception
-            }
-        }
+        });
     }
+
 
     private static final int MESSAGE_READ = 1;
     private static final int REQUEST_ENABLE_BT = 2;
@@ -323,8 +264,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Connection established, start the chat
-            chatThread=new ChatThread(mmSocket);
-            chatThread.start();
+            MainActivity2.socket=mmSocket;
+            goToChatActivity();
         }
 
         public void cancel() {
