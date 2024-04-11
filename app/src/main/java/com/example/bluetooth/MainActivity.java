@@ -6,9 +6,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,7 +22,9 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -41,7 +45,7 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
-    Button listen, showlist;
+   // Button listen, showlist;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private static final String NAME = "BluetoothChat";
@@ -52,14 +56,20 @@ public class MainActivity extends AppCompatActivity {
     TextView statusTxt;
     ListView lv;
     ArrayAdapter adapter;
+    CardView listen, showlist;
 
     @SuppressLint({"MissingInflatedId", "MissingPermission"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listen = (Button) findViewById(R.id.listen_btn);
-        showlist = (Button) findViewById(R.id.list_btn);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window=getWindow();
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        }
+        listen = (CardView) findViewById(R.id.listen_cv);
+        showlist = (CardView) findViewById(R.id.showlist_cv);
         mBluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
         statusTxt=(TextView)findViewById(R.id.status_txt);
         lv=(ListView) findViewById(R.id.lv);
@@ -118,9 +128,6 @@ public class MainActivity extends AppCompatActivity {
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        } else {
-//            startServerThread();
-//            startClientThread();
         }
     }
     private void startServerThread() {
@@ -235,7 +242,6 @@ public class MainActivity extends AppCompatActivity {
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
         }
-
         @SuppressLint("MissingPermission")
         public void run() {
             mBluetoothAdapter.cancelDiscovery();

@@ -1,15 +1,20 @@
 package com.example.bluetooth;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothSocket;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -26,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity2 extends AppCompatActivity {
-    Button send;
+    CardView send;
     RecyclerView recyclerView;
     EditText editText;
     LinearLayoutManager layoutManager;
@@ -38,11 +43,17 @@ public class MainActivity2 extends AppCompatActivity {
     public static BluetoothSocket socket;
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        send=(Button) findViewById(R.id.send_btn);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window=getWindow();
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        }
+        send=(CardView) findViewById(R.id.send_cv);
         editText=(EditText) findViewById(R.id.et);
         recyclerView=(RecyclerView) findViewById(R.id.rv);
         layoutManager=new LinearLayoutManager(this);
@@ -109,7 +120,6 @@ public class MainActivity2 extends AppCompatActivity {
                 }
             }
         }
-
         public void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);
