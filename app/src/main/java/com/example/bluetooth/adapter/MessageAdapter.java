@@ -56,11 +56,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             MessageModel message=messageModels.get(position);
             msg.setText(message.getMsg());
             if(message.getMsgType().equals("w")){
-                LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT
-                );
-                params.gravity= Gravity.RIGHT;
-                ll.setLayoutParams(params);
+                msg.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
             }
         }
     }
